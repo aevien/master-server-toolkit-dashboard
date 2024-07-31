@@ -9,7 +9,7 @@ defineProps<LayoutProps>()
 
 <template>
     <Navbar />
-    <div class="container-fluid content bg-danger">
+    <div class="container-fluid content">
         <div class="row h-100 pt-3">
             <div class="col">
                 <ol class="breadcrumb">
@@ -26,6 +26,7 @@ defineProps<LayoutProps>()
     /* 56px - navbar height */
     height: calc(100vh - 56px);
 }
+
 .wrapper {
     height: calc(100vh - 56px - 80px);
 }
