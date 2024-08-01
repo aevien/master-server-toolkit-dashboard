@@ -19,4 +19,17 @@ export default defineConfig({
       }
     })
   ],
+  build: {
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: true
+      },
+      format: {
+        comments: false,
+      },
+      keep_classnames: false,
+      keep_fnames: false
+    },
+  }
 })
