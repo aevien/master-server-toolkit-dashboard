@@ -10,7 +10,6 @@ const password = ref('admin')
 const mstApi = inject<MstApi>(ProvideInjectKeys.MST_API)
 
 function connect() {
-    console.log(address.value, username.value, password.value)
     mstApi?.start(address.value, username.value, password.value)
 }
 

@@ -1,12 +1,14 @@
-import { MstApiEvents } from "./constants";
+import { MstApiEvents, MstApiMessageOpCodes } from "./constants";
 
 interface Message {
     opcode: string;
+    token: string;
     data: any;
 }
 
 interface Response {
     opcode: string;
+    token: string;
     data?: any;
     error?: string;
 }
@@ -22,6 +24,7 @@ export class MstApi extends EventTarget {
     private _socket!: WebSocket
     private _pendingMessages: Map<string, PendingMessage> = new Map();
     private _isOpen: boolean = false
+    private _token: string = ''
 
     constructor() {
         super()
@@ -48,13 +51,16 @@ export class MstApi extends EventTarget {
             console.log('Connected to Mst API server');
             this._isOpen = true
             this.invokeEvent(MstApiEvents.ON_OPEN)
-            // this.send("echo", "Hello World")
-            //     .then(response => {
-            //         console.log(response.data)
-            //     })
-            //     .catch(error => {
-            //         console.error(error)
-            //     })
+            this.send(MstApiMessageOpCodes.LOGIN, {
+                username,
+                password
+            })
+                .then(response => {
+                    this._token = response.token
+                })
+                .catch(error => {
+                    console.error(error)
+                })
         });
 
         this._socket.addEventListener('message', (event) => {
@@ -88,9 +94,10 @@ export class MstApi extends EventTarget {
         });
     }
 
-    public send = (opcode: string, data: any): Promise<Response> => {
+    public send = (opcode: string, data: any = ''): Promise<Response> => {
         return new Promise((resolve, reject) => {
-            const messageWithOpcode: Message = { opcode, data };
+            const token = this._token
+            const messageWithOpcode: Message = { opcode, token, data };
 
             const existingMessage = this._pendingMessages.get(opcode);
             if (existingMessage) {

@@ -3,7 +3,7 @@ import './style.css'
 import "bootswatch/dist/cosmo/bootstrap.min.css"
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 
-import { createApp } from 'vue'
+import { createApp, reactive } from 'vue'
 import { createPinia } from 'pinia'
 import { createWebHashHistory, createRouter } from 'vue-router'
 import App from './App.vue'
@@ -27,6 +27,11 @@ const app = createApp(App)
 const pinia = createPinia()
 
 app.provide(ProvideInjectKeys.MST_API, new MstApi())
+
+const mstServerInfo = reactive({
+  data: {}
+})
+reactive(app.provide(ProvideInjectKeys.MST_SERVER_INFO, mstServerInfo))
 
 app.use(router)
 app.use(pinia)

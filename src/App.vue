@@ -14,7 +14,7 @@ onMounted(()=>{
   mstApiSocketEvent()
 })
 
-function mstApiSocketEvent(event?: Event) {
+function mstApiSocketEvent() {
   if (mstApi?.isOpen) {
       changePageTo('dashboard')
     } else {

@@ -1,8 +1,29 @@
 <script setup lang="ts">
-import { inject} from 'vue';
+import { inject } from 'vue';
 import { MstApi } from '../core/MstApi';
-import { ProvideInjectKeys } from '../core/constants';
+import { MstApiMessageOpCodes, ProvideInjectKeys } from '../core/constants';
 const mstApi = inject<MstApi>(ProvideInjectKeys.MST_API)
+let mstServerInfo = inject<{
+    data: any
+}>(ProvideInjectKeys.MST_SERVER_INFO)
+
+function getMstServerInfo() {
+    mstApi?.send(MstApiMessageOpCodes.GET_SERVER_INFO)
+        .then((response) => {
+            if (mstServerInfo) {
+                mstServerInfo.data = response.data;
+            }
+            console.log(response)
+        })
+}
+
+function echo() {
+    mstApi?.send(MstApiMessageOpCodes.ECHO)
+        .then((response) => {
+            alert(response.data)
+        })
+}
+
 </script>
 
 <template>
@@ -20,18 +41,21 @@ const mstApi = inject<MstApi>(ProvideInjectKeys.MST_API)
                         <a class="nav-link active" aria-current="page" href="#">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#" @click.prevent="mstApi?.stop">Close</a>
+                        <a class="nav-link" href="#" @click.prevent="mstApi?.stop()">Close</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Link</a>
+                        <a class="nav-link" href="#" @click.prevent="echo()">Echo</a>
                     </li>
-                    <li class="nav-item dropdown">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" @click.prevent="getMstServerInfo()">Get server info</a>
+                    </li>
+                    <!-- <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                             aria-expanded="false">
                             Dropdown
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Action</a></li>
+                            <li><a class="dropdown-item" href="#">Echo</a></li>
                             <li><a class="dropdown-item" href="#">Another action</a></li>
                             <li>
                                 <hr class="dropdown-divider">
@@ -41,7 +65,7 @@ const mstApi = inject<MstApi>(ProvideInjectKeys.MST_API)
                     </li>
                     <li class="nav-item">
                         <a class="nav-link disabled" aria-disabled="true">Disabled</a>
-                    </li>
+                    </li> -->
                 </ul>
             </div>
         </div>
