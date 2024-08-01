@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import Navbar from '../components/NavbarDashboard.vue'
-interface LayoutProps {
-    title: string,
-    container?: string
-}
+import { LayoutProps } from '../core/interfaces';
+
 defineProps<LayoutProps>()
 </script>
 
@@ -15,7 +13,9 @@ defineProps<LayoutProps>()
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item active">{{ title }}</li>
                 </ol>
-                <slot></slot>
+                <div class="wrapper scrollable-div">
+                    <slot></slot>
+                </div>
             </div>
         </div>
     </div>
@@ -28,6 +28,34 @@ defineProps<LayoutProps>()
 }
 
 .wrapper {
-    height: calc(100vh - 56px - 80px);
+    height: calc(100vh - 56px - 70px);
+}
+
+.scrollable-div {
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* Стиль для тонкого скроллбара */
+.scrollable-div::-webkit-scrollbar {
+    width: 8px;
+    /* Ширина скроллбара */
+}
+
+.scrollable-div::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    /* Цвет трека */
+}
+
+.scrollable-div::-webkit-scrollbar-thumb {
+    background: #888;
+    /* Цвет ползунка */
+    border-radius: 4px;
+    /* Закругление углов */
+}
+
+.scrollable-div::-webkit-scrollbar-thumb:hover {
+    background: #555;
+    /* Цвет ползунка при наведении */
 }
 </style>

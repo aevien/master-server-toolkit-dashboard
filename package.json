@@ -1,7 +1,7 @@
 {
   "name": "master-server-toolkit-dashboard",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.1.1",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "bootstrap": "^5.3.3",
+    "bootstrap-icons": "^1.11.3",
     "bootswatch": "^5.3.3",
     "pinia": "^2.2.0",
     "vue": "^3.4.31",

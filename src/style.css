@@ -2,3 +2,7 @@ html,
 body {
   height: 100%;
 }
+
+.bi{
+  margin-right: 10px !important;
+}

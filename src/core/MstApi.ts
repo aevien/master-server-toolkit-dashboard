@@ -49,16 +49,17 @@ export class MstApi extends EventTarget {
 
         this._socket.addEventListener('open', (_event) => {
             console.log('Connected to Mst API server');
-            this._isOpen = true
-            this.invokeEvent(MstApiEvents.ON_OPEN)
             this.send(MstApiMessageOpCodes.LOGIN, {
                 username,
                 password
             })
                 .then(response => {
                     this._token = response.token
+                    this._isOpen = true
+                    this.invokeEvent(MstApiEvents.ON_OPEN)
                 })
                 .catch(error => {
+                    this._isOpen = false
                     console.error(error)
                 })
         });
