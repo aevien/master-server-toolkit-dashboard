@@ -43,56 +43,60 @@ export class MstApi extends EventTarget {
         this._socket.close()
     }
 
-    public start = (address: string, username: string, password: string): void => {
-        const url = `ws://${address}/api`
-        this._socket = new WebSocket(url)
+    public start = (address: string, username: string, password: string): Promise<void> => {
+        return new Promise((resolve, reject) => {
+            const url = `ws://${address}/api`
+            this._socket = new WebSocket(url)
 
-        this._socket.addEventListener('open', (_event) => {
-            console.log('Connected to Mst API server');
-            this.send(MstApiMessageOpCodes.LOGIN, {
-                username,
-                password
-            })
-                .then(response => {
-                    this._token = response.token
-                    this._isOpen = true
-                    this.invokeEvent(MstApiEvents.ON_OPEN)
+            this._socket.addEventListener('open', (_event) => {
+                console.log('Connected to Mst API server');
+                this.send(MstApiMessageOpCodes.LOGIN, {
+                    username,
+                    password
                 })
-                .catch(error => {
-                    this._isOpen = false
-                    console.error(error)
-                })
-        });
+                    .then(response => {
+                        this._token = response.token
+                        this._isOpen = true
+                        this.invokeEvent(MstApiEvents.ON_OPEN)
+                        resolve()
+                    })
+                    .catch(error => {
+                        this._isOpen = false
+                        reject(error)
+                        console.error(error)
+                    })
+            });
 
-        this._socket.addEventListener('message', (event) => {
-            const response: Response = JSON.parse(event.data);
-            const pendingMessage = this._pendingMessages.get(response.opcode);
+            this._socket.addEventListener('message', (event) => {
+                const response: Response = JSON.parse(event.data);
+                const pendingMessage = this._pendingMessages.get(response.opcode);
 
-            if (pendingMessage) {
-                clearTimeout(pendingMessage.timeoutId);
-                if (response.error) {
-                    pendingMessage.reject(new Error(response.error));
+                if (pendingMessage) {
+                    clearTimeout(pendingMessage.timeoutId);
+                    if (response.error) {
+                        pendingMessage.reject(new Error(response.error));
+                    } else {
+                        pendingMessage.resolve(response);
+                        this.invokeEvent(MstApiEvents.ON_MESSAGE, response.data)
+                    }
+                    this._pendingMessages.delete(response.opcode);
                 } else {
-                    pendingMessage.resolve(response);
-                    this.invokeEvent(MstApiEvents.ON_MESSAGE, response.data)
+                    if (response.error) {
+                        console.error(response.error)
+                    }
                 }
-                this._pendingMessages.delete(response.opcode);
-            } else {
-                if (response.error) {
-                    console.error(response.error)
-                }
-            }
-        });
+            });
 
-        this._socket.addEventListener('close', (_event) => {
-            this._isOpen = false
-            this.invokeEvent(MstApiEvents.ON_CLOSE)
-            console.log('Disconnected from Mst API  server');
-        });
+            this._socket.addEventListener('close', (_event) => {
+                this._isOpen = false
+                this.invokeEvent(MstApiEvents.ON_CLOSE)
+                console.log('Disconnected from Mst API  server');
+            });
 
-        this._socket.addEventListener('error', (_event) => {
-            console.error('WebSocket error: ', _event);
-        });
+            this._socket.addEventListener('error', (_event) => {
+                console.error('WebSocket error: ', _event);
+            });
+        })
     }
 
     public send = (opcode: string, data: any = ''): Promise<Response> => {

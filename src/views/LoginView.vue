@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { inject,ref } from 'vue';
+import { inject, ref } from 'vue';
 import { MstApi } from '../core/MstApi';
 import { ProvideInjectKeys } from '../core/constants';
 
@@ -11,6 +11,9 @@ const mstApi = inject<MstApi>(ProvideInjectKeys.MST_API)
 
 function connect() {
     mstApi?.start(address.value, username.value, password.value)
+        .catch(error => {
+            alert(error)
+        })
 }
 
 </script>
