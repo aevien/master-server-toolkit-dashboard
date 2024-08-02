@@ -1,20 +1,22 @@
 <script setup lang="ts">
-import Navbar from '../components/NavbarDashboard.vue'
+import NavbarDashboardComponent from '../components/NavbarDashboardComponent.vue'
 import { LayoutProps } from '../core/interfaces';
 
 defineProps<LayoutProps>()
 </script>
 
 <template>
-    <Navbar />
+    <NavbarDashboardComponent />
     <div class="container-fluid content">
-        <div class="row h-100 pt-3">
-            <div class="col">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item active">{{ title }}</li>
-                </ol>
-                <div class="wrapper scrollable-div">
-                    <slot></slot>
+        <div class="row h-100">
+            <div class="col p-2">
+                <div class="card h-100">
+                    <h4 class="card-header">{{ title }}</h4>
+                    <div class="card-body p-2">
+                        <div class="scrollable-div">
+                            <slot></slot>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -27,35 +29,34 @@ defineProps<LayoutProps>()
     height: calc(100vh - 56px);
 }
 
-.wrapper {
-    height: calc(100vh - 56px - 70px);
+.card-body {
+    position: relative !important;
 }
 
 .scrollable-div {
     overflow-y: auto;
     overflow-x: hidden;
+    position: absolute;
+    top: 0.5rem;
+    bottom: 0.5rem;
+    left: 0.5rem;
+    right: 0.5rem;
 }
 
-/* Стиль для тонкого скроллбара */
 .scrollable-div::-webkit-scrollbar {
     width: 8px;
-    /* Ширина скроллбара */
 }
 
 .scrollable-div::-webkit-scrollbar-track {
     background: #f1f1f1;
-    /* Цвет трека */
 }
 
 .scrollable-div::-webkit-scrollbar-thumb {
     background: #888;
-    /* Цвет ползунка */
     border-radius: 4px;
-    /* Закругление углов */
 }
 
 .scrollable-div::-webkit-scrollbar-thumb:hover {
     background: #555;
-    /* Цвет ползунка при наведении */
 }
 </style>

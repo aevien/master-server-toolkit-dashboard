@@ -28,7 +28,7 @@ const mstServerInfo = inject<MstServerInfo>(ProvideInjectKeys.MST_SERVER_INFO)
                         <ul class="dropdown-menu">
                             <li v-for="(item, index) in mstServerInfo?.modules" :key="index">
                                 <RouterLink
-                                    :to="{ name: 'module', params: { id: item.name.toLowerCase() }, query: { title: item.name } }"
+                                    :to="{ name: 'module', params: { id: item.name.toLowerCase(), tab: 'info' }, query: { title: item.name } }"
                                     class="dropdown-item">{{ item.name }}</RouterLink>
                             </li>
                         </ul>
@@ -36,7 +36,7 @@ const mstServerInfo = inject<MstServerInfo>(ProvideInjectKeys.MST_SERVER_INFO)
                 </ul>
                 <ul class="navbar-nav mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link" href="#" @click.prevent="mstApi?.stop()">Close</a>
+                        <a class="nav-link" href="#" @click.prevent="mstApi?.stop()"><i class="bi bi-box-arrow-right"></i>Exit</a>
                     </li>
                 </ul>
             </div>

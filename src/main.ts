@@ -2,7 +2,6 @@
 import './style.css'
 import "bootswatch/dist/cosmo/bootstrap.min.css"
 import 'bootstrap-icons/font/bootstrap-icons.min.css'
-import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 
 import { createApp, reactive } from 'vue'
 import { createPinia } from 'pinia'
@@ -20,7 +19,7 @@ import { MstServerInfo } from './core/interfaces'
 const routes = [
   { path: '/', name: 'login', component: LoginView },
   { path: '/dashboard', name: 'dashboard', component: DashboardView },
-  { path: '/module/:id', name: 'module', component: ModuleView }
+  { path: '/module/:id/tab/:tab', name: 'module', component: ModuleView }
 ]
 
 const router = createRouter({

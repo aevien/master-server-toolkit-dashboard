@@ -3,6 +3,14 @@ body {
   height: 100%;
 }
 
-.bi{
+.bi {
   margin-right: 10px !important;
+}
+
+.tab-content {
+  padding-top: .5rem !important;
+}
+
+.table{
+  margin: 0 !important;
 }

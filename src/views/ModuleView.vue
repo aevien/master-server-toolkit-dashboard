@@ -1,30 +1,46 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
-import DashboardPageLayout from '../layouts/DashboardPageLayout.vue';
+import { computed, defineAsyncComponent, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
-import AuthModule from '../components/modules/AuthModule.vue';
-import PingModule from '../components/modules/PingModule.vue';
-import ApiModule from '../components/modules/ApiModule.vue';
-import HttpServerModule from '../components/modules/HttpServerModule.vue';
-import NotificationModule from '../components/modules/NotificationModule.vue';
-import ProfilesModule from '../components/modules/ProfilesModule.vue';
 
-const route = useRoute()
-const title = ref(route.query.title as string || '')
+import DashboardPageLayout from '../layouts/DashboardPageLayout.vue';
+import { useMstServerInfo } from '../core/compositions';
+
+const mstServerInfo = useMstServerInfo();
+
+const components: any[] = [];
+const componentIndexes: Record<string, number> = {};
+
+if (mstServerInfo && mstServerInfo.modules) {
+    for (let i = 0; i < mstServerInfo.modules.length; i++) {
+        const name = mstServerInfo.modules[i].name;
+        try {
+            components.push(defineAsyncComponent(() => import(`../components/modules/${name}Component.vue`)));
+            componentIndexes[name.toLocaleLowerCase()] = i;
+        } catch (error) {
+            console.error(`Failed to load component for module: ${name}`, error);
+        }
+    }
+}
+
+console.log('Loaded components:', components);
+console.log('Component indexes:', componentIndexes);
+
+const route = useRoute();
+const title = ref(route.query.title as string || '');
+const panelId = ref<string>(route.params.id as string || '');
+const currentPanelIndex = computed(() => componentIndexes[panelId.value]);
 
 watch(() => route.query.title, (newTitle) => {
     title.value = newTitle as string;
 });
 
+watch(() => route.params.id, (newPanelId) => {
+    panelId.value = newPanelId as string;
+});
 </script>
 
 <template>
     <DashboardPageLayout :title="title">
-        <ApiModule v-if="route.params.id === 'apimodule'" />
-        <AuthModule v-if="route.params.id === 'authmodule'" />
-        <HttpServerModule v-if="route.params.id === 'httpservermodule'" />
-        <NotificationModule v-if="route.params.id === 'notificationmodule'" />
-        <PingModule v-if="route.params.id === 'pingmodule'" />
-        <ProfilesModule v-if="route.params.id === 'profilesmodule'" />
+        <component :is="components[currentPanelIndex]"></component>
     </DashboardPageLayout>
 </template>

@@ -14,3 +14,9 @@ export enum MstApiMessageOpCodes {
     LOGIN = "login",
     GET_SERVER_INFO = "getServerInfo"
 }
+
+export enum ModalType {
+    NORMAL = 'primary',
+    WARNING = 'warning',
+    ERROR = 'danger'
+}

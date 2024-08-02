@@ -1,10 +1,11 @@
 export interface LayoutProps {
-    title: string,
-    container?: string
+    title: string;
+    container?: string;
 }
 
 export interface ModuleLayoutProps {
-    json: string
+    dependancies?: string[];
+    optionalDependancies?: string[];
 }
 
 export interface HttpControllerInfo {
@@ -46,6 +47,7 @@ export interface ApiModuleInfo extends ModuleInfo { }
 export interface ProfilesModuleInfo extends ModuleInfo { }
 export interface NotificationModuleInfo extends ModuleInfo { }
 export interface PingModuleInfo extends ModuleInfo { }
+export interface CensorModule extends ModuleInfo { }
 
 export interface MstServerInfo {
     initializedModules?: number;
@@ -66,5 +68,5 @@ export interface MstServerInfo {
     port?: number;
     incomingTraffic?: number;
     outgoingTraffic?: number;
-    modules?: (AuthModuleInfo | ProfilesModuleInfo | HttpServerModuleInfo | ApiModuleInfo | PingModuleInfo | NotificationModuleInfo)[];
+    modules?: (AuthModuleInfo | ProfilesModuleInfo | HttpServerModuleInfo | ApiModuleInfo | PingModuleInfo | NotificationModuleInfo | CensorModule)[];
 }

@@ -1,11 +1,9 @@
 <script setup lang="ts">
-import { inject } from 'vue';
-import { ProvideInjectKeys } from '../core/constants';
-import { MstServerInfo } from '../core/interfaces';
 
 import DashboardPageLayout from '../layouts/DashboardPageLayout.vue';
+import { useMstServerInfo } from '../core/compositions';
 
-const mstServerInfo = inject<MstServerInfo>(ProvideInjectKeys.MST_SERVER_INFO)
+const mstServerInfo = useMstServerInfo()
 
 </script>
 
@@ -20,8 +18,11 @@ const mstServerInfo = inject<MstServerInfo>(ProvideInjectKeys.MST_SERVER_INFO)
                             {{ item.description }}
                         </p>
                         <RouterLink
-                            :to="{ name: 'module', params: { id: item.name.toLowerCase() }, query: { title: item.name } }"
-                            class="btn btn-info"><i class="bi bi-toggles2"></i>Control panel</RouterLink>
+                            :to="{ name: 'module', params: { id: item.name.toLowerCase(), tab: 'info' }, query: { title: item.name } }"
+                            class="btn btn-info me-2"><i class="bi bi-info-square"></i>Info</RouterLink>
+                        <RouterLink
+                            :to="{ name: 'module', params: { id: item.name.toLowerCase(), tab: 'controls' }, query: { title: item.name } }"
+                            class="btn btn-success"><i class="bi bi-toggles2"></i>Control panel</RouterLink>
                     </div>
                 </div>
             </div>

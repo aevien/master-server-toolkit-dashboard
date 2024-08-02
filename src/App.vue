@@ -9,6 +9,7 @@ const route = useRoute()
 const router = useRouter()
 const mstApi = inject<MstApi>(ProvideInjectKeys.MST_API)
 const mstServerInfo = inject<MstServerInfo>(ProvideInjectKeys.MST_SERVER_INFO)
+let updateInterval: number = 0
 
 mstApi?.addEventListener(MstApiEvents.ON_OPEN, mstApiSocketEvent)
 mstApi?.addEventListener(MstApiEvents.ON_CLOSE, mstApiSocketEvent)
@@ -19,9 +20,14 @@ onMounted(() => {
 
 function mstApiSocketEvent() {
   if (mstApi?.isOpen) {
+    clearInterval(updateInterval)
+    updateInterval = setInterval(() => {
+      getMstServerInfo();
+    }, 1000);
     getMstServerInfo();
     changePageTo('dashboard')
   } else {
+    clearInterval(updateInterval)
     changePageTo('login')
   }
 }
@@ -32,7 +38,7 @@ function getMstServerInfo() {
       if (mstServerInfo) {
         Object.assign(mstServerInfo, response.data);
       }
-      console.log(response)
+      // console.log(response)
     })
 }
 
